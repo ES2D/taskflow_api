@@ -1,12 +1,13 @@
 package com.efrain.taskflow_api.controller;
 
-import com.efrain.taskflow_api.entity.Project;
+import com.efrain.taskflow_api.dto.ProjectRequestDTO;
+import com.efrain.taskflow_api.dto.ProjectResponseDTO;
 import com.efrain.taskflow_api.service.ProjectService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/projects")
@@ -16,28 +17,34 @@ public class ProjectController {
     private ProjectService projectService;
 
     @GetMapping
-    public List<Project> getAllProjects() {
+    public List<ProjectResponseDTO> getAllProjects() {
         return projectService.getAllProjects();
     }
 
     @GetMapping("/{id}")
-    public Optional<Project> getProjectById(@PathVariable Long id) {
+    public ProjectResponseDTO getProjectById(
+            @PathVariable Long id) {
+
         return projectService.getProjectById(id);
     }
 
+    @PostMapping
+    public ProjectResponseDTO createProject(
+            @Valid @RequestBody ProjectRequestDTO projectDTO) {
+
+        return projectService.createProject(projectDTO);
+    }
+
     @PutMapping("/{id}")
-    public Project updateProject(@PathVariable Long id,
-                                 @RequestBody Project project) {
-        return projectService.updateProject(id, project);
+    public ProjectResponseDTO updateProject(
+            @PathVariable Long id,
+            @Valid @RequestBody ProjectRequestDTO projectDTO) {
+
+        return projectService.updateProject(id, projectDTO);
     }
 
     @DeleteMapping("/{id}")
     public void deleteProject(@PathVariable Long id) {
         projectService.deleteProject(id);
-    }
-
-    @PostMapping
-    public Project createProject(@RequestBody Project project) {
-        return projectService.createProject(project);
     }
 }
